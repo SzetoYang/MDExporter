@@ -1,0 +1,14 @@
+/venv/
+/.idea/
+__pycache__/
+/docsss/
+/court/
+*.json
+/output*/
+/temp/
+/build/
+/dist/
+/Test*/
+MD2PDF.spec
+error.log
+.DS_Store
