@@ -114,7 +114,7 @@ class MD2PDF:
         self.toc = temp_ToC
         temp_document.close()
         target_html = f'<head><meta charset="UTF-8"><link rel="stylesheet" type="text/css" href="./style.css"></head>' \
-                      '\n<span style="color:rgb(52,90,138);font-size: 40px;">目录</span>'
+                      '\n<span style="color:rgb(52,90,138);font-size: 40px; font-family: jcfont;">目录</span>'
         temp_title_list = copy.deepcopy(self.title_list)
         # Issue Improvement: 待 增加目录前导符自定义 目前默认 '. '
         point_line = '· ' * 100
@@ -129,9 +129,9 @@ class MD2PDF:
                                         'margin-top: -28px;margin-left:' \
                                         + str(getattr(self, 'catalog_indent', 25) * (each_list[0]) - 1) \
                                         + 'px;font-size:20px; display:inline; color: ' \
-                                          'black;background-color: #ffffff;">' \
+                                          'black;background-color: #ffffff;font-family: jcfont">' \
                                         + each_title + point_line + '</span>'
-                        title_content = '<div class="des"><span style="width: 100%;height:30px;overflow: hidden;' \
+                        title_content = '<div class="des"><span style="width: 100%;height:30px;overflow: hidden;font-family: jcfont' \
                                         'display: inline-block;margin-top:5px">' \
                                         '<div style="float:right;background-color:' \
                                         'white;margin:5px">{1}</div>{0}</span></div>'. \
@@ -451,7 +451,7 @@ class MD2PDF:
         for each in Path('temp').iterdir():
             # if str(each).split('\\')[1] not in self.resource_list:
             # modified by lisj - Linux/Mac的分隔符与Windows不同
-            if os.path.basename(str(each)) not in self.resource_list:
+            if os.path.basename(str(each)) not in self.resource_list and os.path.basename(str(each)) != 'font.ttf':
                 os.remove(str(each))
 
     def get_item_list(self, root):

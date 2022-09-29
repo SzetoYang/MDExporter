@@ -1,0 +1,16 @@
+variables:
+  CI_DOCKER_IMAGE: '/data_department/md-exporter' # /harbor-proj/docker-name
+  APP_VERSION: V1.2
+
+include:
+  - remote: 'http://platform.pages.jcinfo.com/base-platform/ci/.template-gitlab-ci.yml'
+
+docker_push:
+  stage: install
+  tags:
+    - local-runner
+  script:
+    - docker login -u "${CI_REGISTRY_USERNAME}" -p "${CI_REGISTRY_PASSWORD}" "http://${CI_REGISTRY_HOST}"
+    - echo "${CI_REGISTRY_HOST}${CI_DOCKER_IMAGE}:${APP_VERSION}"
+    - docker build -t "${CI_REGISTRY_HOST}${CI_DOCKER_IMAGE}:${APP_VERSION}" .
+    - docker push "${CI_REGISTRY_HOST}${CI_DOCKER_IMAGE}:${APP_VERSION}"

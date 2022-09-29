@@ -33,11 +33,18 @@ def clean_resource():
         os.remove(str(each))
     os.rmdir('./temp')
 
+def list_fonts():
+    result = []
+    font_path = Path("./fonts")
+    if hasattr(sys, '_MEIPASS'):
+        font_path = Path(sys._MEIPASS).joinpath("fonts")
+    for each_file in font_path.iterdir():
+        if each_file.with_suffix(".ttf"):
+            result.append(each_file.stem)
+    return result
 
+    
 if __name__ == '__main__':
-
-    
-    
     # 生成参数解析器
     parser = argparse.ArgumentParser(prog="嘉诚平台文档导出工具", usage=Style.USAGE,
                                      description="----嘉诚信息平台产品文档导出工具----")
@@ -56,6 +63,7 @@ if __name__ == '__main__':
     parser.add_argument('--doc_type', nargs='?', help='指定文档类型，如 产品白皮书')
     parser.add_argument('--copyright', nargs='?', help='指定版权人')
     parser.add_argument('--doc_sequence', nargs='*', help='指定文档关联顺序')
+    parser.add_argument('--font',nargs="?", type=str, choices=list_fonts(), default="Alibaba-PuHuiTi-Regular",help="选择文档字体")
     parser.add_argument('--cover_page', nargs='?', type=str, help='指定首页模板HTML')
     parser.add_argument('--statement_page', nargs='?', type=str, help='指定扉页模板HTML')
     parser.add_argument('--header_page', nargs='?', type=str, help='指定页眉Logo模板HTML')
@@ -83,15 +91,17 @@ if __name__ == '__main__':
         platform_name = platform.system()
         print(f'当前系统为 {platform_name}')
 
+        font_dir_path = Path("fonts")
         # 打包程序运行时，Linux和Windows平台均会创建一个临时路径
         # 临时路径保存在 sys 的 field '_MEIPASS' 中
         # 如果直接运行脚本，则不存在此field
         if hasattr(sys, '_MEIPASS'):
             # Issue Feature: 使用Pathlib拼接路径，避免不同平台路径分隔符不一样的问题
             sys.path.append(str(Path(getattr(sys, '_MEIPASS')).joinpath('bin')))
-
+            font_dir_path = Path(sys._MEIPASS).joinpath("fonts")
+        copyfile(str(font_dir_path.joinpath(kwargs["font"])) + ".ttf",'./temp/font.ttf')
         kwargs['platform_name'] = platform_name
-
+        
         resource_kwargs = {
             'cover_page': kwargs.pop('cover_page'),
             'statement_page': kwargs.pop('statement_page'),
